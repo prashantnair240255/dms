@@ -1,32 +1,37 @@
-MYSQLCFLAGS= mysql_config --cflags
-MYSQLLIBS= mysql_config --libs
-$(CC)-o mysqlrun $(INCLUDES) $(MYSQLCFLAGS) mysql.c $(MYSQLLIBS)
+CFLAGS=`mysql_config --cflags`
+LIBS=`mysql_config --libs`
 
 All : server
 
-server : server.o  transactwithclient.o SocketConnect.o SendMsg.o RecvMsg.o CleanExit.o
-	gcc -o server server.o transactwithclient.o SocketConnect.o SendMsg.o RecvMsg.o CleanExit.o -lpthread
+server : server.o  transactwithclient.o Command.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o
+	gcc -o server server.o transactwithclient.o Command.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o $(LIBS) -lpthread
 
 server.o : server.c sheader.h methods.h
-	gcc -c server.c
+	gcc -c $(CFLAGS) server.c
+
+Command.o : Command.c sheader.h methods.h GlobalData.h
+	gcc -c $(CFLAGS) Command.c
+
+ServerSignalHandler.o : ServerSignalHandler.c sheader.h methods.h
+	gcc -c $(CFLAGS) ServerSignalHandler.c
 
 SocketConnect.o : SocketConnect.c sheader.h methods.h
-	gcc -c SocketConnect.c -lpthread
+	gcc -c $(CFLAGS) SocketConnect.c -lpthread
+
+DatabaseConnect.o : DatabaseConnect.c sheader.h GlobalData.h
+	gcc -c $(CFLAGS) DatabaseConnect.c
 
 transactwithclient.o : transactwithclient.c sheader.h ../SocketFunc.h
-	gcc -c transactwithclient.c
+	gcc -c $(CFLAGS) transactwithclient.c
 
 CleanExit.o : CleanExit.c sheader.h ../SocketFunc.h
-	gcc -c CleanExit.c
+	gcc -c $(CFLAGS) CleanExit.c
 
 SendMsg.o: ../SendMsg.c
-	gcc -c  ../SendMsg.c
+	gcc -c $(CFLAGS) ../SendMsg.c
 
 RecvMsg.o: ../RecvMsg.c
-	gcc -c ../RecvMsg.c
+	gcc -c $(CFLAGS) ../RecvMsg.c
 
 clean:
 	rm -rf *.o
-
-	INCLUDES="c:\mysql\include"
-	$(CC)-o mysqlrun $(INCLUDES) $(MYSQLCFLAGS) mysql.c $(MYSQLLIBS)

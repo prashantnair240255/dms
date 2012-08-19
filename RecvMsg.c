@@ -4,10 +4,10 @@
 
 char* RecieveMsg(int nSocket)
 {
-	static char cMsg[500];
+	static char cMesg[500];
 	int nReturnVal;
-	memset(cMsg,0,500);
-	nReturnVal=recv(nSocket,cMsg,sizeof(cMsg),0);
-	return cMsg;
+	memset(cMesg,0,500);
+	nReturnVal=recv(nSocket,cMesg,sizeof(cMesg),0);
+	return cMesg;
 }
 

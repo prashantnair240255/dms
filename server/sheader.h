@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<fcntl.h>
 #include<sys/stat.h>
-#include<mysql.h>
+#include "mysql.h"
 #include<string.h>
 #include<sys/types.h>
 #include<sys/ipc.h>

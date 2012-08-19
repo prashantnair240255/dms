@@ -1,7 +1,10 @@
+CFLAGS=`mysql_config --cflags`
+LIBS=`mysql_config --libs`
+
 All : client
 
-client : client.o  transactwithserv.o SendMsg.o RecvMsg.o ClientSignalHandler.o 
-	gcc -o client client.o transactwithserv.o SendMsg.o RecvMsg.o ClientSignalHandler.o -lpthread
+client : client.o  transactwithserv.o SendMsg.o RecvMsg.o ClientSignalHandler.o ShowMenu.o
+	gcc -o client client.o transactwithserv.o SendMsg.o RecvMsg.o ClientSignalHandler.o ShowMenu.o -lpthread
 
 client.o : client.c cheader.h methods.h ../server/methods.h
 	gcc -c client.c -lpthread
@@ -13,10 +16,13 @@ ClientSignalHandler.o : ClientSignalHandler.c cheader.h methods.h
 	gcc -c ClientSignalHandler.c
 
 SendMsg.o: ../SendMsg.c
-	gcc -c  ../SendMsg.c
+	gcc -c $(CFLAGS) ../SendMsg.c
 
 RecvMsg.o: ../RecvMsg.c
-	gcc -c ../RecvMsg.c
+	gcc -c $(CFLAGS) ../RecvMsg.c
+
+ShowMenu.o : ShowMenu.c cheader.h methods.h
+	gcc -c $(CFLAGS) ShowMenu.c
 
 clean:
 	rm -rf *.o

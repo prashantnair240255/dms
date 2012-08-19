@@ -5,7 +5,7 @@ void main(int argc,char *argv[])
 {
 	struct sockaddr_in serv;
 	int nPort,nSocketDesc;
-	printf("---Connected to the server---\n");
+	printf("\n---Connected to the server---\n\n");
 	nPort = atoi(argv[2]);
 	nSocketDesc = socket(AF_INET,SOCK_STREAM,0);
 	memset(&serv,0,sizeof(struct sockaddr_in));

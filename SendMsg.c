@@ -4,8 +4,9 @@
 	
 int SendMsg(int nSocketDesc,char * p_Buff)
 {
-	char cMsg[1000];
-	memset(cMsg,0,1000);
+	char cMsg[500];
+	memset(cMsg,0,500);
 	strcpy(cMsg,p_Buff);
-	return(send(nSocketDesc,cMsg,strlen(p_Buff),0));
+	int ret = send(nSocketDesc,cMsg,sizeof(cMsg),0);
+	return ret;
 }

@@ -1,5 +1,7 @@
 void* TransactWithClient(void *);
 void ServerSignalHandler();
 void CleanExit(void*);
-//void DatabaseConnect();
+int DatabaseConnect();
 void SocketConnect(char*[]);
+int Command(const char *, ...);
+void SigHandler(int);

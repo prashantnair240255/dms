@@ -13,14 +13,17 @@ void SocketConnect(char *argv[])
 	serv.sin_port = htons(nPort);
 	bind(nSocketDesc,(struct sockaddr *)&serv,sizeof(serv));
 	listen(nSocketDesc,5);
+	printf("\n===========================\n");
+	printf("Waiting for connection\n");
+	printf("===========================\n\n");
 	while(1)
-	{
+	{	
 		int nClientSize = sizeof(cli);
 		if((nAcceptedSocket=accept(nSocketDesc,(struct sockaddr *)&cli, &nClientSize))==-1)
 			perror("Socket not created:");
 		else
 		{
-			printf("connected\n");
+			printf("\nMessage from Client %d: Connected Successfully\n",nAcceptedSocket);
 			if((nRet=pthread_create(&tid,NULL,TransactWithClient,(void *)nAcceptedSocket))==-1)
 				perror("\nThread not created: ");
 		}

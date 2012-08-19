@@ -4,21 +4,29 @@
 
 void* TransactWithClient(void* vSocket)
 {
-	char* p_Buff;
+	char *p_Buff;
 	p_Buff = (char*)malloc(500);
-	int nRecieved;
 	int nSocket = (int)vSocket;
 	bzero(p_Buff,sizeof(p_Buff));
-	do
-	{	
+
+	while(strcpy(p_Buff,RecieveMsg(nSocket))!=NULL){
+		sleep(1);
+		printf("Message from Client %d: ",nSocket);
 		if(!strcmp(p_Buff,"~2"))
 		{
 			CleanExit((void*)nSocket);
 		}		
-		else
+		else if(!strcmp(p_Buff,"1"))
 		{	
-			write(1,p_Buff,strlen(p_Buff));
-			SendMsg(nSocket,p_Buff);
+			printf("Request Monitor\n");
 		}
-	} while((p_Buff = RecieveMsg(nSocket))!=NULL);
+		else if(!strcmp(p_Buff,"2"))
+		{	
+			printf("View Monitoring Status\n");
+		}
+		else if(!strcmp(p_Buff,"3"))
+		{	
+			printf("Exit\n");
+		}
+	}
 }

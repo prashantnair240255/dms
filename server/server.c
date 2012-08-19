@@ -3,6 +3,7 @@
 
 void main(int argc,char *argv[])
 {
-//	DatabaseConnect();
-	SocketConnect(argv);
+	ServerSignalHandler();
+	if(DatabaseConnect())
+		SocketConnect(argv);
 }
