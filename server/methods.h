@@ -9,3 +9,5 @@ void RequestMonitor(int);
 void ViewMonitoringStatus(int);
 void Exit();
 int CheckStatus(char*);
+void StartMonitor(int*);
+int FileExists(char*,int);

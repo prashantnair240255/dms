@@ -4,25 +4,26 @@
 
 int CheckStatus(char *p_cFilePath)
 {
-	MYSQL *result;
-	result = NULL;
 	printf("Inside CheckStatus() = %s\n",p_cFilePath);
-
-	if(mysql_query(conn,"insert into DMS_TEAM07_CLIENTLOGDETAILS_TB values('Hell',1,'CHAR','CHARA',2)"))//command("select * from %s where LOG_FILE_NAME='%s'",TABLE,p_cFilePath)){
-	{		printf("Error %u in selecting: %s\n",mysql_errno(conn),mysql_error(conn));
+	if(!command("select * from %s where LOG_FILE_NAME = '%s'",TABLE,p_cFilePath)){	
+		printf("Error %u in selecting: %s\n",mysql_errno(conn),mysql_error(conn));
 	}
-	else{/*
+	else{
 		printf("In storing part\n");
-		if((res=mysql_store_result(conn))){
-			printf("Error %u in storing: %s\n",mysql_errno(conn),mysql_error(conn));
+		p_sqlResultSet=mysql_store_result(conn);
+		int nRows = mysql_num_rows(p_sqlResultSet);
+		printf("No. of rows: %d\n",nRows);
+		if(nRows==0){
+			mysql_free_result(p_sqlResultSet);
+			return 1;
 		}
 		else{
-			printf("Inc checking part\n");
-			if(res)
-				return 1;
-			else
-				return 0;
-		}*/
-		return 0;
+			mysql_free_result(p_sqlResultSet);
+			return 0;
+		}
+		
+		mysql_free_result(p_sqlResultSet);
 	}
+	
+	return -1;
 }

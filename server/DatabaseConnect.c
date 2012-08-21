@@ -31,6 +31,9 @@ int DatabaseConnect()
 			printf("\nTable created.\n\n");
 		}
 	}
+
+	p_sqlResultSet = mysql_use_result(conn);
+	mysql_free_result(p_sqlResultSet);
 	
 	return 1;
 }
