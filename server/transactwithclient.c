@@ -1,32 +1,40 @@
 #include "sheader.h"
-#include "../SocketFunc.h"
 #include "methods.h"
+#include "../SocketFunc.h"
 
 void* TransactWithClient(void* vSocket)
 {
 	char *p_Buff;
 	p_Buff = (char*)malloc(500);
-	int nSocket = (int)vSocket;
+	int nCSocket = (int)vSocket;
 	bzero(p_Buff,sizeof(p_Buff));
 
-	while(strcpy(p_Buff,RecieveMsg(nSocket))!=NULL){
+	while(strcpy(p_Buff,RecieveMsg(nCSocket))!=NULL){
 		sleep(1);
-		printf("Message from Client %d: ",nSocket);
 		if(!strcmp(p_Buff,"~2"))
 		{
-			CleanExit((void*)nSocket);
+			CleanExit((void*)nCSocket);
 		}		
 		else if(!strcmp(p_Buff,"1"))
 		{	
-			printf("Request Monitor\n");
+			printf("Message from Client %d: ",nCSocket);
+			RequestMonitor(nCSocket);
 		}
 		else if(!strcmp(p_Buff,"2"))
 		{	
-			printf("View Monitoring Status\n");
+			printf("Message from Client %d: ",nCSocket);
+			ViewMonitoringStatus(nCSocket);
 		}
 		else if(!strcmp(p_Buff,"3"))
 		{	
-			printf("Exit\n");
+			printf("Message from Client %d: ",nCSocket);
+			Exit();
 		}
 	}
 }
+
+void ViewMonitoringStatus(int nCSocket)
+{}
+
+void Exit()
+{}

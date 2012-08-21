@@ -3,8 +3,8 @@ LIBS=`mysql_config --libs`
 
 All : server
 
-server : server.o  transactwithclient.o Command.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o
-	gcc -o server server.o transactwithclient.o Command.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o $(LIBS) -lpthread
+server : server.o  transactwithclient.o Command.o CheckStatus.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o
+	gcc -o server server.o transactwithclient.o Command.o CheckStatus.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o $(LIBS) -lpthread
 
 server.o : server.c sheader.h methods.h
 	gcc -c $(CFLAGS) server.c
@@ -12,8 +12,14 @@ server.o : server.c sheader.h methods.h
 Command.o : Command.c sheader.h methods.h GlobalData.h
 	gcc -c $(CFLAGS) Command.c
 
+CheckStatus.o : CheckStatus.c sheader.h methods.h GlobalData.h
+	gcc -c $(CFLAGS) CheckStatus.c
+
 ServerSignalHandler.o : ServerSignalHandler.c sheader.h methods.h
 	gcc -c $(CFLAGS) ServerSignalHandler.c
+
+RequestMonitor.o : RequestMonitor.c sheader.h methods.h
+	gcc -c $(CFLAGS) RequestMonitor.c
 
 SocketConnect.o : SocketConnect.c sheader.h methods.h
 	gcc -c $(CFLAGS) SocketConnect.c -lpthread
@@ -21,7 +27,7 @@ SocketConnect.o : SocketConnect.c sheader.h methods.h
 DatabaseConnect.o : DatabaseConnect.c sheader.h GlobalData.h
 	gcc -c $(CFLAGS) DatabaseConnect.c
 
-transactwithclient.o : transactwithclient.c sheader.h ../SocketFunc.h
+transactwithclient.o : transactwithclient.c sheader.h ../SocketFunc.h methods.h
 	gcc -c $(CFLAGS) transactwithclient.c
 
 CleanExit.o : CleanExit.c sheader.h ../SocketFunc.h

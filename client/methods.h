@@ -3,4 +3,4 @@ void ClientSignalHandler();
 void SigHandler(int);
 void ShowMenu();
 void RequestMonitor();
-struct status iewMonitoringStatus();
+struct status ViewMonitoringStatus();

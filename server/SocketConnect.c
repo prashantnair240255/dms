@@ -23,7 +23,7 @@ void SocketConnect(char *argv[])
 			perror("Socket not created:");
 		else
 		{
-			printf("\nMessage from Client %d: Connected Successfully\n",nAcceptedSocket);
+			printf("\nClient %d connected successfully\n-------------------------------------\n",nAcceptedSocket);
 			if((nRet=pthread_create(&tid,NULL,TransactWithClient,(void *)nAcceptedSocket))==-1)
 				perror("\nThread not created: ");
 		}

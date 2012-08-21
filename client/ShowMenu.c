@@ -19,7 +19,7 @@ void ShowMenu(int nSocket)
 	SendMsg(nSocket,p_nChoice);
 	switch(nChoice)
 	{
-		case 1: printf("MonitorFile()\n");
+		case 1: RequestMonitor();
 			break;
 		case 2: printf("ViewMonitoringStatus()\n");
 			break;

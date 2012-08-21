@@ -27,8 +27,9 @@ int DatabaseConnect()
 			printf("\nTable not created...Error %u: %s\n\n",mysql_errno(conn),mysql_error(conn));
 			return 0;
 		}
-		else
+		else{
 			printf("\nTable created.\n\n");
+		}
 	}
 	
 	return 1;

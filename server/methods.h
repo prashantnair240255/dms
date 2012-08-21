@@ -5,3 +5,7 @@ int DatabaseConnect();
 void SocketConnect(char*[]);
 int Command(const char *, ...);
 void SigHandler(int);
+void RequestMonitor(int);
+void ViewMonitoringStatus(int);
+void Exit();
+int CheckStatus(char*);
