@@ -3,9 +3,13 @@
 
 void TransactWithServer(int nSocket)
 {
-	char cBuff[500];
+	char cBuff[500],szName[50];
 	ClientSignalHandler(nSocket);
 	char* p_Recieved;
+	printf("%s ",RecieveMsg(nSocket));
+	scanf("%s%*c",szName);
+	SendMsg(nSocket,szName);
+	
 	while(1)
 	{
 		ShowMenu(nSocket);

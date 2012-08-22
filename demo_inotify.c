@@ -1,18 +1,3 @@
-/*************************************************************************\
-	  else if (event->mask & IN_MODIFY)
-	    {
-		  printf ("File %s modified.\n", event->name);
-	    }
-*                  Copyright (C) Michael Kerrisk, 2010.                   *
-*                                                                         *
-* This program is free software. You may use, modify, and redistribute it *
-* under the terms of the GNU Affero General Public License as published   *
-* by the Free Software Foundation, either version 3 or (at your option)   *
-* any later version. This program is distributed without any warranty.    *
-* See the file COPYING.agpl-v3 for details.                               *
-\*************************************************************************/
-
-
 /* demo_inotify.c
 
    Demonstrate the use of the inotify API.
@@ -26,15 +11,12 @@
    and later.
 */
 #include <sys/inotify.h>
+#include <stdio.h>
 #include <limits.h>
-#include "tlpi_hdr.h"
-#include "error_functions.h"
-#include "alt_functions.h"
 
-static void             /* Display information from inotify_event structure */
-displayInotifyEvent(struct inotify_event *i)
+static void displayInotifyEvent(struct inotify_event *i)
 {
-    printf("    wd =%2d; ", i->wd);
+    printf("wd =%2d;", i->wd);
     if (i->cookie > 0)
         printf("cookie =%4d; ", i->cookie);
 
@@ -61,53 +43,40 @@ displayInotifyEvent(struct inotify_event *i)
         printf("        name = %s\n", i->name);
 }
 
-#define BUF_LEN (10 * (sizeof(struct inotify_event) + NAME_MAX + 1))
+#define BUF_LEN 10*(sizeof(struct inotify_event))
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int inotifyFd, wd, j;
     char buf[BUF_LEN];
-    ssize_t numRead;
+    int numRead;
     char *p;
     struct inotify_event *event;
-
-    //if (argc < 2 || strcmp(argv[1], "--help") == 0)
-      //  usageErr("%s pathname...\n", argv[0]);
-
     inotifyFd = inotify_init();                 /* Create inotify instance */
     if (inotifyFd == -1)
         perror("inotify_init");
 
     /* For each command-line argument, add a watch for all events */
-
     for (j = 1; j < argc; j++) {
         wd = inotify_add_watch(inotifyFd, argv[j], IN_ALL_EVENTS);
         if (wd == -1)
             perror("inotify_add_watch");
-
         printf("Watching %s using wd %d\n", argv[j], wd);
     }
 
     for (;;) {                                  /* Read events forever */
-        numRead = read(inotifyFd, buf, BUF_LEN);
+        numRead = read(inotifyFd,buf,BUF_LEN);
         if (numRead == 0)
             printf("read() from inotify fd returned 0!\n");
-
         if (numRead == -1)
             printf("read\n");
-
         printf("Read %ld bytes from inotify fd\n", (long) numRead);
 
         /* Process all of the events in buffer returned by read() */
-
-        for (p = buf; p < buf + numRead; ) {
+        for (p=buf; p<buf+numRead;) {
             event = (struct inotify_event *) p;
             displayInotifyEvent(event);
-
-            p += sizeof(struct inotify_event) + event->len;
+            p += sizeof(struct inotify_event)+event->len;
         }
     }
-
-    exit(EXIT_SUCCESS);
 }

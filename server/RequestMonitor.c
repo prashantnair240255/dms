@@ -7,7 +7,7 @@ int *fd;
 void RequestMonitor(int nSocket)
 {
 	int *p_nFiles,nLoopCount=1,nFiles,nIndex=0;
-	char p_cFilePath[200], cFiles[2],cSendMsg[300];
+	char p_cFilePath[200], cFiles[2],cSendMsg[300], p_cFileNamePath[10][200];
 	printf("\n-----Request for Monitor by Client %d------\n",nSocket);
 	strcpy(cFiles,(char*)RecieveMsg(nSocket));
 	nFiles = atoi(cFiles);
@@ -26,6 +26,8 @@ void RequestMonitor(int nSocket)
 			else{
 				sprintf(cSendMsg,"%s --- Available for monitoring\n",p_cFilePath);
 				SendMsg(nSocket,cSendMsg);
+				strcpy(p_cFileNamePath[nIndex],p_cFilePath);
+				nIndex++;
 			}
 		}
 		else{
@@ -34,7 +36,7 @@ void RequestMonitor(int nSocket)
 		}
 		nLoopCount++;
 	}
-	StartMonitor(fd);
+	StartMonitor(fd,p_cFileNamePath,nIndex,nSocket);
 }
 
 int FileExists(char *p_cFilePath,int nIndex)

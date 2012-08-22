@@ -33,8 +33,7 @@ void* TransactWithClient(void* vSocket)
 	}
 }
 
-void ViewMonitoringStatus(int nCSocket)
+void ViewMonitoringStatus(int nSocket)
 {}
 
-void Exit()
-{}
+void Exit(){}
