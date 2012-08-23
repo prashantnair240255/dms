@@ -2,8 +2,6 @@
 #include "methods.h"
 #include "GlobalData.h"
 
-int *fd;
-
 void RequestMonitor(int nSocket)
 {
 	int *p_nFiles,nLoopCount=1,nFiles,nIndex=0;
@@ -12,7 +10,6 @@ void RequestMonitor(int nSocket)
 	strcpy(cFiles,(char*)RecieveMsg(nSocket));
 	nFiles = atoi(cFiles);
 	printf("Server nFiles : %d\n",nFiles);
-	fd = (int*)malloc(nFiles*sizeof(int));
 	while(nLoopCount<=nFiles){
 		bzero(p_cFilePath,sizeof(p_cFilePath));
 		strcpy(p_cFilePath,(char*)RecieveMsg(nSocket));
@@ -21,7 +18,6 @@ void RequestMonitor(int nSocket)
 			if(!CheckStatus(p_cFilePath)){
 				sprintf(cSendMsg,"%s --- Already being monitored by someone else",p_cFilePath);
 				SendMsg(nSocket,cSendMsg);
-				fd[nLoopCount-1]=0;
 			}
 			else{
 				sprintf(cSendMsg,"%s --- Available for monitoring\n",p_cFilePath);
@@ -36,18 +32,20 @@ void RequestMonitor(int nSocket)
 		}
 		nLoopCount++;
 	}
-	StartMonitor(fd,p_cFileNamePath,nIndex,nSocket);
+	StartMonitor(p_cFileNamePath,nIndex,nSocket);
 }
 
 int FileExists(char *p_cFilePath,int nIndex)
 {
+	int fd;
 	printf("In FileExists() = %s\n",p_cFilePath);
-	if((fd[nIndex]=open(p_cFilePath,O_RDWR))==-1){
+	if((fd=open(p_cFilePath,O_RDWR))==-1){
 		printf("Returning 1\n");
 		return 1;
 	}
 	else{
 		printf("Returning 0\n");
+		close(fd);
 		return 0;
 	}
 }

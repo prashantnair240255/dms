@@ -9,7 +9,7 @@ void RequestMonitor(int);
 void ViewMonitoringStatus(int);
 void Exit();
 int CheckStatus(char*);
-void StartMonitor(int*,char (*)[200],int,int);
+void StartMonitor(char (*)[200],int,int);
 int FileExists(char*,int);
 void DisplayInotifyEvent(struct inotify_event *,char (*)[200]);
 void MakeLogFiles(char [][200],int);
