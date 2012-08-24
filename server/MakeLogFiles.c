@@ -19,10 +19,17 @@ void MakeLogFiles(char szFilePath[][200],int nSocket)
 			row = mysql_fetch_row(p_sqlResultSet);
 			p_cFile = strrchr(szFilePath[0],'/');
 			*p_cFile++;
-			for(nLoop=0;p_cFile[nLoop]!='.';nLoop++)
-				szFile[nLoop] = p_cFile[nLoop];
+
+			for(nLoop=0;p_cFile[nLoop]!='.';nLoop++){
+				if(p_cFile[nLoop]!='\0')
+		                     szFile[nLoop] = p_cFile[nLoop];
+		         	else
+		                     break;
+
+			}
 			sprintf(szPath,"../User/%s/%slog1.txt",row[0],szFile);
-			if(creat(szPath,0755)==-1)
+			printf("%s\n",szPath);
+			if(open(szPath,O_CREAT|O_RDWR|O_TRUNC,0755)==-1)
 				perror("Error in creating file:");
 		}
 	}

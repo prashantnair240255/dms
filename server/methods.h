@@ -13,3 +13,6 @@ void StartMonitor(char (*)[200],int,int);
 int FileExists(char*,int);
 void DisplayInotifyEvent(struct inotify_event *,char (*)[200]);
 void MakeLogFiles(char [][200],int);
+void WriteToLog(char p_cFilePath[][200]);
+int FileIsFull(char *p_cPath);
+void ClearAllFiles(char *p_cFile,char *p_cUser);

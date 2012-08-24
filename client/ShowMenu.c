@@ -19,9 +19,9 @@ void ShowMenu(int nSocket)
 	SendMsg(nSocket,p_nChoice);
 	switch(nChoice)
 	{
-		case 1: RequestMonitor();
+		case 1: RequestMonitor(nSocket);
 			break;
-		case 2: printf("ViewMonitoringStatus()\n");
+		case 2: ViewMonitoringStatus(nSocket);
 			break;
 		case 3: printf("Exit()\n");
 			break;
