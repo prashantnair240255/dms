@@ -5,7 +5,7 @@
 void RequestMonitor(int nSocket)
 {
 	int *p_nFiles,nLoopCount=1,nFiles,nIndex=0;
-	char p_cFilePath[200], cFiles[2],cSendMsg[300], p_cFileNamePath[10][200];
+	char p_cFilePath[200], szFiles[2],szSendMsg[300], p_cFileNamePath[10][200];
 	printf("\n-----Request for Monitor by Client %d------\n",nSocket);
 	strcpy(cFiles,(char*)RecieveMsg(nSocket));
 	nFiles = atoi(cFiles);

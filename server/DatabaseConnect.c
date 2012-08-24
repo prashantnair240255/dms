@@ -23,7 +23,7 @@ int DatabaseConnect()
 	}
 	else
 	{
-		if(command("create table %s(LOG_FILE_NAME varchar(20) PRIMARY KEY,LOG_FILE_COUNT integer(1),FILE_NAME varchar(20), CLIENT_ID integer(4));",TABLE_LOG)){	
+		if(command("create table %s(LOG_FILE_NAME varchar(20) PRIMARY KEY,LOG_FILE_COUNT integer(1),FILE_PATH varchar(20), CLIENT_ID integer(4));",TABLE_LOG)){	
 			printf("\nTable %s not created...Error %u: %s\n\n",TABLE_LOG,mysql_errno(conn),mysql_error(conn));
 			return 0;
 		}

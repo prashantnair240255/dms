@@ -9,7 +9,7 @@ void ViewMonitoringStatus(int nSocket)
 	printf("------View the status of file-----\n");
 	strcpy(szFile,(char*)RecvMsg(nSocket));
 
-	if(command("select log_file_name from %s where log_file_name='%s'",TABLE_LOG,szFile))
+	if(command("select file_path from %s where file_path='%s'",TABLE_LOG,szFile))
 		printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
 	else{
 		p_sqlResultSet = mysql_store_result(conn);
