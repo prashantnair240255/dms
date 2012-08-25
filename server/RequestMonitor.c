@@ -20,6 +20,7 @@
  * ** $Log: $
  * **
  * \*******************************************************/
+
 #include "sheader.h"
 #include "methods.h"
 #include "GlobalData.h"

@@ -28,8 +28,9 @@
 void MakeLogFiles(char szFilePath[][200],int nSocket)
 {
 	int nLoop;
-	char szPath[50],szFile[50],*p_cFile;
+	char szPath[50],szFileName[50],*p_cFile;
 	printf("Inside Make LOG \n");
+	bzero(szFileName,sizeof(szFileName));
 	MYSQL_ROW row;
 	int nRows;
 	if(command("select client_name from %s where client_id=%d",TABLE_CLIENT,nSocket))
@@ -45,17 +46,18 @@ void MakeLogFiles(char szFilePath[][200],int nSocket)
 
 			for(nLoop=0;p_cFile[nLoop]!='.';nLoop++){
 				if(p_cFile[nLoop]!='\0')
-		                     szFile[nLoop] = p_cFile[nLoop];
+		                     szFileName[nLoop] = p_cFile[nLoop];
 		         	else
 		                     break;
 
 			}
-			sprintf(szPath,"../User/%s/%slog1.txt",row[0],szFile);
+			sprintf(szPath,"../User/%s/%slog1.txt",row[0],szFileName);
 			printf("%s\n",szPath);
 			if(open(szPath,O_CREAT|O_RDWR|O_TRUNC,0755)==-1)
 				perror("Error in creating file:");
 			if(command("insert into %s values('%s',1,'%s',%d)",TABLE_LOG,szPath,szFilePath,nSocket)==1)
 				printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
+			command("commit");
 		}
 	}
 	mysql_free_result(p_sqlResultSet);

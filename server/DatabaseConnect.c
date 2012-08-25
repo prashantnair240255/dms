@@ -34,7 +34,7 @@ int DatabaseConnect()
 		exit(1);
 	}
 
-	if(mysql_real_connect(conn,"localhost","root","wipro123","test",0,NULL,0)==NULL)
+	if(mysql_real_connect(conn,"localhost","root","uhsiavli","test",0,NULL,0)==NULL)
 	{
 		printf("\nConnection problem...Error %u: %s\n\n",mysql_errno(conn),mysql_error(conn));
 		exit(1);

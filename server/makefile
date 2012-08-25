@@ -3,8 +3,8 @@ LIBS=`mysql_config --libs`
 
 All : server
 
-server : server.o  transactwithclient.o Command.o ViewMonitoringStatus.o CheckStatus.o MakeLogFiles.o StartMonitor.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o
-	gcc -o server server.o transactwithclient.o Command.o MakeLogFiles.o ViewMonitoringStatus.o CheckStatus.o StartMonitor.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o $(LIBS) -lpthread
+server : server.o  TransactWithClient.o Command.o ViewMonitoringStatus.o ExtractFile.o CheckStatus.o MakeLogFiles.o StartMonitor.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o
+	gcc -o server server.o TransactWithClient.o Command.o MakeLogFiles.o ViewMonitoringStatus.o CheckStatus.o StartMonitor.o ServerSignalHandler.o SocketConnect.o DatabaseConnect.o ExtractFile.o SendMsg.o RecvMsg.o CleanExit.o RequestMonitor.o $(LIBS) -lpthread
 
 server.o : server.c sheader.h methods.h
 	gcc -c $(CFLAGS) server.c
@@ -14,6 +14,9 @@ Command.o : Command.c sheader.h methods.h GlobalData.h
 
 CheckStatus.o : CheckStatus.c sheader.h methods.h GlobalData.h
 	gcc -c $(CFLAGS) CheckStatus.c
+
+ExtractFile.o : ExtractFile.c sheader.h methods.h GlobalData.h
+	gcc -c $(CFLAGS) ExtractFile.c
 
 MakeLogFiles.o : MakeLogFiles.c sheader.h methods.h GlobalData.h
 	gcc -c $(CFLAGS) MakeLogFiles.c
@@ -36,8 +39,8 @@ SocketConnect.o : SocketConnect.c sheader.h methods.h
 DatabaseConnect.o : DatabaseConnect.c sheader.h GlobalData.h
 	gcc -c $(CFLAGS) DatabaseConnect.c
 
-transactwithclient.o : transactwithclient.c sheader.h ../SocketFunc.h methods.h
-	gcc -c $(CFLAGS) transactwithclient.c
+TransactWithClient.o : TransactWithClient.c sheader.h ../SocketFunc.h methods.h
+	gcc -c $(CFLAGS) TransactWithClient.c
 
 CleanExit.o : CleanExit.c sheader.h ../SocketFunc.h
 	gcc -c $(CFLAGS) CleanExit.c

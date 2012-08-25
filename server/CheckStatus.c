@@ -26,10 +26,10 @@
 #include "methods.h"
 #include "GlobalData.h"
 
-int CheckStatus(char *p_cFilePath)
+int CheckStatus(char *pFilePath)
 {
-	printf("Inside CheckStatus() = %s\n",p_cFilePath);
-	if(command("select * from %s where LOG_FILE_NAME = '%s'",TABLE_LOG,p_cFilePath)){	
+	printf("Inside CheckStatus() = %s\n",pFilePath);
+	if(command("select * from %s where FILE_PATH = '%s'",TABLE_LOG,pFilePath)){	
 		printf("Error %u in selecting: %s\n",mysql_errno(conn),mysql_error(conn));
 	}
 	else{

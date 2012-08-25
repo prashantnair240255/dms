@@ -54,37 +54,35 @@ void StartMonitor(char p_cFilePath[][200],int nLength,int nSocket)
 	        if (nRead == -1)
 		        perror("Inotify read returned -1:");
 	        printf("Read %ld bytes from inotify fd\n", (long)nRead);
-	        for (p_cLoop=szBuffer; p_cLoop<szBuffer+nRead;){ /* Process all of the events in buffer returned by read() */
+	        for(p_cLoop=szBuffer; p_cLoop<szBuffer+nRead;){ /* Process all of the events in buffer returned by read() */
     		        event = (struct inotify_event *)p_cLoop;
 	                DisplayInotifyEvent(event,p_cFilePath);
 		        p_cLoop += sizeof(struct inotify_event)+event->len;
 	        }
          }
-
 }
 
 void DisplayInotifyEvent(struct inotify_event *event,char p_cFilePath[][200])
 {
 	int nIndex = (event->wd)-1;
-    printf("Change in %s\n",p_cFilePath[nIndex]);
+    	printf("Change in %s\n",p_cFilePath[nIndex]);
 
 	char p_cPath[1][200];
 	strcpy(p_cPath[0],p_cFilePath[nIndex]);
 	printf("Inside DisplayNotifyEvent = %s\n",p_cPath[0]);
 	if(event->mask & IN_ACCESS)
 		printf("File is being accessed\n");
-    if(event->mask & IN_ATTRIB)        
+	if(event->mask & IN_ATTRIB)        
 		printf("File attributes have been changed\n");
-    if(event->mask & IN_MODIFY)        
-		printf("IN_MODIFY\n ");
+	if(event->mask & IN_MODIFY)        
+		printf("File has been modified\n ");
 	WriteToLog(p_cPath);
 }
 
 void WriteToLog(char p_cFilePath[][200])
 {
-	
 	MYSQL_ROW row;
-	char szBuff[50],*p_cFile,szFile[50],szPath[100];
+	char szBuff[50],*p_cFile,szFile[50],szPath[100],*ClientName;
 	int nCount=0,nfd,nLoop;
 	printf("Inside WriteToLog = %s\n",p_cFilePath);
 	struct stat filestatus;
@@ -97,24 +95,18 @@ void WriteToLog(char p_cFilePath[][200])
 			p_sqlResultSet = mysql_store_result(conn);
 			row = mysql_fetch_row(p_sqlResultSet);
 			printf("before separating = %s\n",p_cFilePath[0]);
-			bzero(szFile,sizeof(szFile));
-			p_cFile = strrchr(p_cFilePath[0],'/');
-			*p_cFile++;
-			for(nLoop=0;p_cFile[nLoop]!='.';nLoop++){
-				if(p_cFile[nLoop]!='\0')
-					szFile[nLoop] = p_cFile[nLoop];
-				else
-					break;
-			}
-			printf("after separating = %s\n",szFile);
+			strcpy(szFile,ExtractFile(p_cFilePath[0]));
+			printf("%s\n",szFile);
+			ClientName = row[0];
+			mysql_free_result(p_sqlResultSet);
 			do{
 				nCount++;
-				sprintf(szPath,"../User/%s/%slog%d.txt",row[0],szFile,nCount);
+				sprintf(szPath,"../User/%s/%slog%d.txt",ClientName,szFile,nCount);
 			}while(nCount<6 && FileIsFull(szPath,nCount,p_cFilePath));
 
 			if(nCount==6){
-				ClearAllFiles(szFile,row[0]);
-				sprintf(szPath,"../User/%s/%slog1.txt",row[0],szFile);
+				ClearAllFiles(szFile,ClientName);
+				sprintf(szPath,"../User/%s/%slog1.txt",ClientName,szFile);
 			}
 			else{
 				printf("\topening file to write\n");
@@ -141,6 +133,7 @@ int FileIsFull(char *p_cPath,int nCount,char szFilePath[][200])
 	
 	if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,p_cPath,nCount,szFilePath[0],g_nSocket)==1)
 		printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
+	command("commit");
 	struct stat filestat;
 	if(stat(p_cPath,&filestat)==-1){
 		perror("stat");

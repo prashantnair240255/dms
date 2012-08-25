@@ -2,7 +2,7 @@
  * **
  * ** Filename SocketConnect.c
  * **
- * ** Description: Establishing connection with server.
+ * ** Description: Establishing connection with server which will help in concurrent transactions.
  * **
  * ** 
  * ** Copyright (c) 24/08/2012 "ABC Ltd."
@@ -27,11 +27,11 @@
 #include "GlobalData.h"
 
 pthread_t tid;
+char szName[50],szPath[100];
+struct sockaddr_in serv,cli;
+int nPort, nSocketDesc, nAcceptedSocket,nRet;
 void SocketConnect(char *argv[])
 {
-	char szName[50],szPath[100];
-	struct sockaddr_in serv,cli;
-	int nPort, nSocketDesc, nAcceptedSocket,nRet;
 	nPort = atoi(argv[1]);
 	nSocketDesc = socket(AF_INET,SOCK_STREAM,0);
 	serv.sin_family = AF_INET;
@@ -42,6 +42,13 @@ void SocketConnect(char *argv[])
 	printf("\n===========================\n");
 	printf("Waiting for connection\n");
 	printf("===========================\n\n");
+	
+	ClientConnect();
+	close(nSocketDesc);
+}
+
+void ClientConnect()
+{
 	while(1)
 	{	
 		int nClientSize = sizeof(cli);
@@ -55,6 +62,7 @@ void SocketConnect(char *argv[])
 			strcpy(szName,(char*)RecieveMsg(nAcceptedSocket));
 			if(command("insert into %s values(%d, '%s')",TABLE_CLIENT,nAcceptedSocket,szName))
 				printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
+			command("commit");
 			sprintf(szPath,"../User/%s",szName);
 			if((mkdir(szPath,0755))==-1)
 				perror("Error in creating folder:");
@@ -62,5 +70,4 @@ void SocketConnect(char *argv[])
 				perror("\nThread not created: ");
 		}
 	}
-	close(nSocketDesc);
 }
