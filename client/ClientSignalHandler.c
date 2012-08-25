@@ -1,3 +1,26 @@
+/*******************************************************\
+ * **
+ * ** Filename ClientSignalHandler.c
+ * **
+ * ** Description To handle the Signal from Client side.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
 #include "cheader.h"
 #include "methods.h"
 #include "../SocketFunc.h"

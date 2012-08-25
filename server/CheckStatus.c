@@ -1,3 +1,27 @@
+/*******************************************************\
+ * **
+ * ** Filename CheckStatus.c
+ * **
+ * ** Description: Checking the status of file.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
+
 #include "sheader.h"
 #include "methods.h"
 #include "GlobalData.h"

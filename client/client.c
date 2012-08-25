@@ -1,3 +1,26 @@
+/*******************************************************\
+ * **
+ * ** Filename client.c
+ * **
+ * ** Description Main function of client.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
 #include "cheader.h"
 #include "methods.h"
 

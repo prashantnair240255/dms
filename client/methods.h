@@ -1,3 +1,6 @@
+/*
+ * methods.h
+ */
 void TransactWithServer(int);
 void ClientSignalHandler();
 void SigHandler(int);

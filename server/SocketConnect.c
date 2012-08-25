@@ -1,3 +1,27 @@
+/*******************************************************\
+ * **
+ * ** Filename SocketConnect.c
+ * **
+ * ** Description: Establishing connection with server.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
+
 #include "sheader.h"
 #include "methods.h"
 #include "GlobalData.h"
@@ -25,6 +49,7 @@ void SocketConnect(char *argv[])
 			perror("Socket not created:");
 		else
 		{
+			system("clear");
 			printf("\nClient %d connected successfully\n-------------------------------------\n",nAcceptedSocket);
 			SendMsg(nAcceptedSocket,"Input your name:");
 			strcpy(szName,(char*)RecieveMsg(nAcceptedSocket));

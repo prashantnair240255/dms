@@ -1,3 +1,26 @@
+/*******************************************************\
+ * **
+ * ** Filename MakeLogFiles.c
+ * **
+ * ** Description: Makeing Log files.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
 #include "sheader.h"
 #include "methods.h"
 #include "GlobalData.h"
@@ -31,6 +54,8 @@ void MakeLogFiles(char szFilePath[][200],int nSocket)
 			printf("%s\n",szPath);
 			if(open(szPath,O_CREAT|O_RDWR|O_TRUNC,0755)==-1)
 				perror("Error in creating file:");
+			if(command("insert into %s values('%s',1,'%s',%d)",TABLE_LOG,szPath,szFilePath,nSocket)==1)
+				printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
 		}
 	}
 	mysql_free_result(p_sqlResultSet);

@@ -1,3 +1,26 @@
+/*******************************************************\
+ * **
+ * ** Filename StartMonitor.c
+ * **
+ * ** Description: Start monitoring the file.
+ * **
+ * ** 
+ * ** Copyright (c) 24/08/2012 "ABC Ltd."
+ * ** All Rights Reserved
+ * **
+ * ** Author:
+ * **    Authors Prashant Nair, Rakesh Arora
+ * **
+ * ** General Comments
+ * **
+ * **
+ * ** $Header: $
+ * **
+ * **
+ * ** $Log: $
+ * **
+ * \*******************************************************/
+
 #include "sheader.h"
 #include "methods.h"
 #include "GlobalData.h"
@@ -87,7 +110,7 @@ void WriteToLog(char p_cFilePath[][200])
 			do{
 				nCount++;
 				sprintf(szPath,"../User/%s/%slog%d.txt",row[0],szFile,nCount);
-			}while(nCount<6 && FileIsFull(szPath));
+			}while(nCount<6 && FileIsFull(szPath,nCount,p_cFilePath));
 
 			if(nCount==6){
 				ClearAllFiles(szFile,row[0]);
@@ -110,11 +133,14 @@ void WriteToLog(char p_cFilePath[][200])
 	}	
 }
 
-int FileIsFull(char *p_cPath)
+int FileIsFull(char *p_cPath,int nCount,char szFilePath[][200])
 {
 	printf("Inside File is Full = %s\n",p_cPath);
 	if(open(p_cPath,O_RDWR)==-1)
 		open(p_cPath,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0755);
+	
+	if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,p_cPath,nCount,szFilePath[0],g_nSocket)==1)
+		printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
 	struct stat filestat;
 	if(stat(p_cPath,&filestat)==-1){
 		perror("stat");

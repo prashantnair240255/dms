@@ -1,3 +1,6 @@
+/*
+ *	methods.h
+ */
 void* TransactWithClient(void *);
 void ServerSignalHandler();
 void CleanExit(void*);
@@ -14,5 +17,6 @@ int FileExists(char*,int);
 void DisplayInotifyEvent(struct inotify_event *,char (*)[200]);
 void MakeLogFiles(char [][200],int);
 void WriteToLog(char p_cFilePath[][200]);
-int FileIsFull(char *p_cPath);
+int FileIsFull(char *p_cPath,int nCount,char szFilePath[][200]);
 void ClearAllFiles(char *p_cFile,char *p_cUser);
+void CreateTable();
