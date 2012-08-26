@@ -25,7 +25,7 @@
 void RequestMonitor(int nSocket)
 {
 	int nFiles,i=1;
-	char cFile[200],cnFiles[2],cRecvMsg[300];
+	char cFile[200],cnFiles[2],cRecvMsg[300],szSendMsg[100];
 	
 	system("clear");
 	printf("You have requested to monitor file(s).\n");
@@ -37,11 +37,16 @@ void RequestMonitor(int nSocket)
 	printf("Please enter the name of files along with their paths (separated by a blank space):\n");
 	while(i<=nFiles){
 		bzero(cFile,sizeof(cFile));
+		bzero(szSendMsg,sizeof(szSendMsg));
 		fgets(cFile,sizeof(cFile),stdin);
 		cFile[strlen(cFile)-1]='\0';
 		SendMsg(nSocket,cFile);
 		strcpy(cRecvMsg,(char*)RecieveMsg(nSocket));
 		printf("%s\n",cRecvMsg);
-		i++;
+		sprintf(szSendMsg,"%s --- Already being monitored by someone else",cFile);
+		if(!strcmp(szSendMsg,cRecvMsg))
+			ShowMenu(nSocket);
+		else
+			i++;
 	}
 }

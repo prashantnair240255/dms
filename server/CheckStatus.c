@@ -29,7 +29,7 @@
 int CheckStatus(char *pFilePath)
 {
 	printf("Inside CheckStatus() = %s\n",pFilePath);
-	if(command("select * from %s where FILE_PATH = '%s'",TABLE_LOG,pFilePath)){	
+	if(command("select FILE_PATH from %s where FILE_PATH = '%s'",TABLE_LOG,pFilePath)){	
 		printf("Error %u in selecting: %s\n",mysql_errno(conn),mysql_error(conn));
 	}
 	else{

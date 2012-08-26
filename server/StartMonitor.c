@@ -26,6 +26,7 @@
 #include "GlobalData.h"
 
 int *fd,g_nSocket;
+struct stat filestatus;
 void StartMonitor(char p_cFilePath[][200],int nLength,int nSocket)
 {
 	g_nSocket = nSocket;
@@ -82,13 +83,13 @@ void DisplayInotifyEvent(struct inotify_event *event,char p_cFilePath[][200])
 void WriteToLog(char p_cFilePath[][200])
 {
 	MYSQL_ROW row;
-	char szBuff[50],*p_cFile,szFile[50],szPath[100],*ClientName;
+	char *p_cFile,szFile[50],szPath[100],ClientName[30];
 	int nCount=0,nfd,nLoop;
 	printf("Inside WriteToLog = %s\n",p_cFilePath);
-	struct stat filestatus;
 	if(stat(p_cFilePath[0],&filestatus)==-1)
 		perror("stat");
 	else{
+		printf("Socket No = %d\n",g_nSocket);
 		if(command("select CLIENT_NAME from %s where CLIENT_ID=%d",TABLE_CLIENT,g_nSocket))
 			printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
 		else{
@@ -97,10 +98,13 @@ void WriteToLog(char p_cFilePath[][200])
 			printf("before separating = %s\n",p_cFilePath[0]);
 			strcpy(szFile,ExtractFile(p_cFilePath[0]));
 			printf("%s\n",szFile);
-			ClientName = row[0];
+			strcpy(ClientName,row[0]);
+			printf("CLient Name = %s\n",ClientName);
 			mysql_free_result(p_sqlResultSet);
 			do{
 				nCount++;
+				bzero(szPath,sizeof(szPath));
+				printf("Client Name = %s\n",ClientName);
 				sprintf(szPath,"../User/%s/%slog%d.txt",ClientName,szFile,nCount);
 			}while(nCount<6 && FileIsFull(szPath,nCount,p_cFilePath));
 
@@ -112,34 +116,52 @@ void WriteToLog(char p_cFilePath[][200])
 				printf("\topening file to write\n");
 			}
 			nfd = open(szPath,O_RDWR|O_APPEND);
-			bzero(szBuff,sizeof(szBuff));
-			sprintf(szBuff,"\nLast accessed time:%d seconds\t\n",filestatus.st_atime);
-			write(nfd,szBuff,strlen(szBuff));
-			bzero(szBuff,sizeof(szBuff));
-			sprintf(szBuff,"Last modified time:%d seconds\t\n",filestatus.st_mtime);
-			write(nfd,szBuff,strlen(szBuff));
-			bzero(szBuff,sizeof(szBuff));
-			sprintf(szBuff,"Last status change time:%d seconds \t\n",filestatus.st_ctime);
-			write(nfd,szBuff,strlen(szBuff));
+			ConvertnWrite(nfd);
 		}
 	}	
+}
+
+void ConvertnWrite(int nfd)
+{
+	char szBuff[100];
+	struct tm *local;
+	const char *days[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"};
+	const char *months[] = {"January", "February", "March", "April","May","June","July","August","September","October","November","December"};
+
+	bzero(szBuff,sizeof(szBuff));
+        local = localtime(&filestatus.st_atime);
+	sprintf(szBuff,"\nLast accessed time:%s, %d %s %d (%d:%d:%d)\n",days[local->tm_wday],local->tm_mday,months[local->tm_mon],(local->tm_year)+1900,local->tm_hour,local->tm_min,local->tm_sec);
+	write(nfd,szBuff,strlen(szBuff));
+
+	bzero(szBuff,sizeof(szBuff));
+	local = localtime(&filestatus.st_mtime);
+	sprintf(szBuff,"\nLast modified time:%s, %d %s %d (%d:%d:%d)\n",days[local->tm_wday],local->tm_mday,months[local->tm_mon],(local->tm_year)+1900,local->tm_hour,local->tm_min,local->tm_sec);
+	write(nfd,szBuff,strlen(szBuff));
+
+	bzero(szBuff,sizeof(szBuff));
+	local = localtime(&filestatus.st_ctime);
+	sprintf(szBuff,"\nLast status change time:%s, %d %s %d (%d:%d:%d)\n",days[local->tm_wday],local->tm_mday,months[local->tm_mon],(local->tm_year)+1900,local->tm_hour,local->tm_min,local->tm_sec);
+	write(nfd,szBuff,strlen(szBuff));
 }
 
 int FileIsFull(char *p_cPath,int nCount,char szFilePath[][200])
 {
 	printf("Inside File is Full = %s\n",p_cPath);
-	if(open(p_cPath,O_RDWR)==-1)
+	if(open(p_cPath,O_RDWR)==-1){
 		open(p_cPath,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0755);
-	
-	if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,p_cPath,nCount,szFilePath[0],g_nSocket)==1)
-		printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
-	command("commit");
+		if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,p_cPath,nCount,szFilePath[0],g_nSocket)==1)
+			printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
+		else
+			command("commit");
+	}
+	//mysql_store_result(conn);
 	struct stat filestat;
 	if(stat(p_cPath,&filestat)==-1){
 		perror("stat");
 		exit(1);
 	}
 	else{
+		//mysql_free_result(p_sqlResultSet);
 		int nSize = filestat.st_size;
 		printf("File Size:%d\n",nSize);
 		if(nSize>=100)

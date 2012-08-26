@@ -13,6 +13,7 @@ void ViewMonitoringStatus(int);
 void Exit();
 int CheckStatus(char*);
 char* ExtractFile(char [][200]);
+void ConvertnWrite(int);
 void StartMonitor(char (*)[200],int,int);
 int FileExists(char*,int);
 void DisplayInotifyEvent(struct inotify_event *,char (*)[200]);

@@ -26,7 +26,7 @@
 
 void ViewMonitoringStatus(int nSocket)
 {
-	char szFile[100],szMsg[100];
+	char szFile[100],szMsg[200];
 	system("clear");
 	printf("You opted to view the status of the file\n");
 	printf("Please write the file (along with the path):\n");

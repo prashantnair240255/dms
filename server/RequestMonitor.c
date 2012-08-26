@@ -41,6 +41,7 @@ void RequestMonitor(int nSocket)
 			if(!CheckStatus(p_cFilePath)){
 				sprintf(szSendMsg,"%s --- Already being monitored by someone else",p_cFilePath);
 				SendMsg(nSocket,szSendMsg);
+				TransactWithClient((void*)socket);
 			}
 			else{
 				sprintf(szSendMsg,"%s --- Available for monitoring\n",p_cFilePath);
