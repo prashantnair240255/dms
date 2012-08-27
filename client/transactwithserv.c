@@ -27,9 +27,9 @@
 void
 TransactWithServer (int nSocket)
 {
-  char cBuff[500], szName[50];
+  char szBuff[500], szName[50];
   ClientSignalHandler (nSocket);
-  char *p_Recieved;
+  char *pRecieved;
   printf ("%s ", RecieveMsg (nSocket));
   scanf ("%s%*c", szName);
   SendMsg (nSocket, szName);
@@ -37,12 +37,12 @@ TransactWithServer (int nSocket)
   while (1)
     {
       ShowMenu (nSocket);
-      bzero (cBuff, sizeof (cBuff));
-      fgets (cBuff, sizeof (cBuff), stdin);
-      SendMsg (nSocket, cBuff);
+      bzero (szBuff, sizeof (szBuff));
+      fgets (szBuff, sizeof (szBuff), stdin);
+      SendMsg (nSocket, szBuff);
       sleep (1);
-      p_Recieved = RecieveMsg (nSocket);
-      printf ("Message from Server: %s\n", p_Recieved);
+      pRecieved = RecieveMsg (nSocket);
+      printf ("Message from Server: %s\n", pRecieved);
     }
   close (nSocket);
 }

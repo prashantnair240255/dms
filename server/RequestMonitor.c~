@@ -2,7 +2,7 @@
  * **
  * ** Filename RequestMonitor.c
  * **
- * ** Description: Request to Monitor file(s).
+ * ** Description: Request for monitoring.
  * **
  * ** 
  * ** Copyright (c) 24/08/2012 "ABC Ltd."
@@ -27,47 +27,43 @@
 
 void RequestMonitor(int nSocket)
 {
-	int *pFiles,nLoopCount=1,nFiles,nIndex=0,nFlag=0;
-	char szFilePath[200], szFiles[2],szSendMsg[300], szFileNamePath[10][200];
+	int *p_nFiles,nLoopCount=1,nFiles,nIndex=0;
+	char p_cFilePath[200], szFiles[2],szSendMsg[300], p_cFileNamePath[10][200];
 	printf("\n-----Request for Monitor by Client %d------\n",nSocket);
 	strcpy(szFiles,(char*)RecieveMsg(nSocket));
 	nFiles = atoi(szFiles);
 	printf("Server nFiles : %d\n",nFiles);
 	while(nLoopCount<=nFiles){
-		bzero(szFilePath,sizeof(szFilePath));
-		strcpy(szFilePath,(char*)RecieveMsg(nSocket));
-		printf("Inside RequestMonitor() = %s\n",szFilePath);
-		if(!FileExists(szFilePath,nLoopCount-1)){
-			if(!CheckStatus(szFilePath)){
-				sprintf(szSendMsg,"%s --- Already being monitored by someone else",szFilePath);
+		bzero(p_cFilePath,sizeof(p_cFilePath));
+		strcpy(p_cFilePath,(char*)RecieveMsg(nSocket));
+		printf("Inside RequestMonitor() = %s\n",p_cFilePath);
+		if(!FileExists(p_cFilePath,nLoopCount-1)){
+			if(!CheckStatus(p_cFilePath)){
+				sprintf(szSendMsg,"%s --- Already being monitored by someone else",p_cFilePath);
 				SendMsg(nSocket,szSendMsg);
-				SendMsg(nSocket,"1");
-				TransactWithClient((void*)nSocket);
+				TransactWithClient((void*)socket);
 			}
 			else{
-				sprintf(szSendMsg,"%s --- Available for monitoring\n",szFilePath);
+				sprintf(szSendMsg,"%s --- Available for monitoring\n",p_cFilePath);
 				SendMsg(nSocket,szSendMsg);
-				strcpy(szFileNamePath[nIndex],szFilePath);
+				strcpy(p_cFileNamePath[nIndex],p_cFilePath);
 				nIndex++;
 			}
 		}
 		else{
-			sprintf(szSendMsg,"%s --- This file doesn't exist\n",szFilePath);
+			sprintf(szSendMsg,"%s --- This file doesn't exist\n",p_cFilePath);
 			SendMsg(nSocket,szSendMsg);
-			SendMsg(nSocket,"2");
-			TransactWithClient((void*)nSocket);
 		}
 		nLoopCount++;
 	}
-	SendMsg(nSocket,"3");
-	StartMonitor(szFileNamePath,nIndex,nSocket);
+	StartMonitor(p_cFileNamePath,nIndex,nSocket);
 }
 
-int FileExists(char *szFilePath,int nIndex)
+int FileExists(char *p_cFilePath,int nIndex)
 {
 	int fd;
-	printf("In FileExists() = %s\n",szFilePath);
-	if((fd=open(szFilePath,O_RDWR))==-1){
+	printf("In FileExists() = %s\n",p_cFilePath);
+	if((fd=open(p_cFilePath,O_RDWR))==-1){
 		printf("Returning 1\n");
 		return 1;
 	}

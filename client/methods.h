@@ -7,3 +7,4 @@ void SigHandler(int);
 void ShowMenu();
 void RequestMonitor();
 void ViewMonitoringStatus(int);
+void Exit();

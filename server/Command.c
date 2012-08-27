@@ -27,14 +27,14 @@
 int command(const char *format, ...)
 {
         va_list arg;
-        int done;
-	p_Command = (char *)malloc(5000);
-	bzero(p_Command,sizeof(p_Command));
+        int nDone;
+	pCommand = (char *)malloc(5000);
+	bzero(pCommand,sizeof(pCommand));
         va_start(arg,format);
-        done = vsprintf(p_Command,format,arg);
+        nDone = vsprintf(pCommand,format,arg);
         va_end(arg);
         
-	if(mysql_query(conn,p_Command))
+	if(mysql_query(conn,pCommand))
 		return 1;
 
         return 0;

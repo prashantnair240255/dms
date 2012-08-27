@@ -28,7 +28,7 @@
 void MakeLogFiles(char szFilePath[][200],int nSocket)
 {
 	int nLoop;
-	char szPath[50],szFileName[50],*pFile;
+	char szPath[50],szFileName[50],*p_cFile;
 	printf("Inside Make LOG \n");
 	bzero(szFileName,sizeof(szFileName));
 	MYSQL_ROW row;
@@ -41,12 +41,12 @@ void MakeLogFiles(char szFilePath[][200],int nSocket)
 			printf("Client not present\n");
 		else{
 			row = mysql_fetch_row(p_sqlResultSet);
-			pFile = strrchr(szFilePath[0],'/');
-			*pFile++;
+			p_cFile = strrchr(szFilePath[0],'/');
+			*p_cFile++;
 
-			for(nLoop=0;pFile[nLoop]!='.';nLoop++){
-				if(pFile[nLoop]!='\0')
-		                     szFileName[nLoop] = pFile[nLoop];
+			for(nLoop=0;p_cFile[nLoop]!='.';nLoop++){
+				if(p_cFile[nLoop]!='\0')
+		                     szFileName[nLoop] = p_cFile[nLoop];
 		         	else
 		                     break;
 

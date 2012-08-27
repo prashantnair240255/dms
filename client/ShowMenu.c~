@@ -39,21 +39,14 @@ void ShowMenu(int nSocket)
 	
 	sprintf(pChoice,"%d",nChoice);
 	SendMsg(nSocket,pChoice);
-	while(1){
 	switch(nChoice)
 	{
 		case 1: RequestMonitor(nSocket);
 			break;
 		case 2: ViewMonitoringStatus(nSocket);
 			break;
-		case 3: Exit();
+		case 3: printf("Exit()\n");
 			break;
 		default: printf("Please select from above\n");
 	}
-	}
-}
-
-void Exit()
-{
-	exit(0);
 }

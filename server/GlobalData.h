@@ -7,4 +7,5 @@
 #define BUF_LEN 10*sizeof(struct inotify_event)
 MYSQL *conn;
 MYSQL_RES *p_sqlResultSet;
-static char* p_Command;
+static char* pCommand;
+int nMaxSize,nMaxFiles;

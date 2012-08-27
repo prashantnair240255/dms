@@ -26,7 +26,7 @@
 #include "../SocketFunc.h"
 
 int nSocketNo;
-char* pSendSig;
+char* p_SendSig;
 void ClientSignalHandler(int nSocket)
 {
 	nSocketNo = nSocket;

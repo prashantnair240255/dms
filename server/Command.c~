@@ -23,7 +23,6 @@
 #include "sheader.h"
 #include "GlobalData.h"
 #include "methods.h"
-#include<stdarg.h>
 
 int command(const char *format, ...)
 {

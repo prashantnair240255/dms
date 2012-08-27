@@ -24,36 +24,32 @@
 #include "methods.h"
 void RequestMonitor(int nSocket)
 {
-	ClientSignalHandler();
 	int nFiles,i=1;
-	char szFile[200],szFiles[2],szRecvMsg[300],szSendMsg[100],szSendMesg[100],szMesag[2];
+	char cFile[200],cnFiles[2],cRecvMsg[300],szSendMsg[100],szSendMesg[100];
 	system("clear");
 	printf("You have requested to monitor file(s).\n");
 	printf("Please tell the number of files you want to monitor: ");
 	scanf("%d%*c",&nFiles);				//(%*c) for no buffer problem
-	sprintf(szFiles,"%d",nFiles);
-	SendMsg(nSocket,szFiles);
+	sprintf(cnFiles,"%d",nFiles);
+	SendMsg(nSocket,cnFiles);
 	printf("Please enter the name of files along with their paths (separated by a blank space):\n");
 	while(i<=nFiles){
-		bzero(szFile,sizeof(szFile));
+		bzero(cFile,sizeof(cFile));
 		bzero(szSendMsg,sizeof(szSendMsg));
 		bzero(szSendMesg,sizeof(szSendMesg));
-		fgets(szFile,sizeof(szFile),stdin);
-		szFile[strlen(szFile)-1]='\0';
-		SendMsg(nSocket,szFile);
-		strcpy(szRecvMsg,(char*)RecieveMsg(nSocket));
-		printf("%s\n",szRecvMsg);
-		strcpy(szMesag,(char*)RecieveMsg(nSocket));
-		printf("szMesag = %s\n",szMesag);
-		if(!strcmp(szMesag,"1")){
+		fgets(cFile,sizeof(cFile),stdin);
+		cFile[strlen(cFile)-1]='\0';
+		SendMsg(nSocket,cFile);
+		strcpy(cRecvMsg,(char*)RecieveMsg(nSocket));
+		printf("%s\n",cRecvMsg);
+		sprintf(szSendMsg,"%s --- Already being monitored by someone else",cFile);
+		sprintf(szSendMesg,"%s --- This file doesn't exist",cFile);
+		if(!strcmp(szSendMsg,cRecvMsg)){
 			printf("Please enter from start again...\n");
 			ShowMenu(nSocket);
 		}
-		else if(!strcmp(szMesag,"2")){
+		else if(!strcmp(szSendMesg,cRecvMsg)){
 			printf("Please enter from start again...\n");
-			ShowMenu(nSocket);					
-		}
-		else if(!strcmp(szMesag,"3")){
 			ShowMenu(nSocket);					
 		}
 		else

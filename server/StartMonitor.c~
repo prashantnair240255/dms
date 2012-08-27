@@ -64,22 +64,22 @@ void DisplayInotifyEvent(struct inotify_event *event,char pFilePath[][200])
 	int nIndex = (event->wd)-1;
     	printf("Change in %s\n",pFilePath[nIndex]);
 
-	char pPath[1][200];
-	strcpy(pPath[0],pFilePath[nIndex]);
-	printf("Inside DisplayNotifyEvent = %s\n",pPath[0]);
+	char p_cPath[1][200];
+	strcpy(p_cPath[0],pFilePath[nIndex]);
+	printf("Inside DisplayNotifyEvent = %s\n",p_cPath[0]);
 	if(event->mask & IN_ACCESS)
 		printf("File is being accessed\n");
 	if(event->mask & IN_ATTRIB)        
 		printf("File attributes have been changed\n");
 	if(event->mask & IN_MODIFY)        
 		printf("File has been modified\n ");
-	WriteToLog(pPath);
+	WriteToLog(p_cPath);
 }
 
 void WriteToLog(char pFilePath[][200])
 {
 	MYSQL_ROW row;
-	char *pFile,szFile[50],szPath[100],ClientName[30];
+	char *p_cFile,szFile[50],szPath[100],ClientName[30];
 	int nCount=0,nFileDesc,nLoop;
 	printf("Inside WriteToLog = %s\n",pFilePath);
 	if(stat(pFilePath[0],&filestatus)==-1)
@@ -140,20 +140,19 @@ void ConvertnWrite(int nFileDesc)
 	write(nFileDesc,szBuff,strlen(szBuff));
 }
 
-int FileIsFull(char *pPath,int nCount,char szFilePath[][200])
+int FileIsFull(char *p_cPath,int nCount,char szFilePath[][200])
 {
-//	ReadFromConfig();
-//	printf("nMaxSize = %d\n",nMaxSize);
-	if(open(pPath,O_RDWR)==-1){
-		open(pPath,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0755);
-		if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,pPath,nCount,szFilePath[0],g_nSocket)==1)
+	printf("Inside File is Full = %s\n",p_cPath);
+	if(open(p_cPath,O_RDWR)==-1){
+		open(p_cPath,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0755);
+		if(command("insert into %s values('%s',%d,'%s',%d)",TABLE_LOG,p_cPath,nCount,szFilePath[0],g_nSocket)==1)
 			printf("Error %u:%s\n",mysql_errno(conn),mysql_error(conn));
 		else
 			command("commit");
 	}
 	//mysql_store_result(conn);
 	struct stat filestat;
-	if(stat(pPath,&filestat)==-1){
+	if(stat(p_cPath,&filestat)==-1){
 		perror("stat");
 		exit(1);
 	}
@@ -168,13 +167,13 @@ int FileIsFull(char *pPath,int nCount,char szFilePath[][200])
 	}
 }
 
-void ClearAllFiles(char *pFile,char *pUser)
+void ClearAllFiles(char *p_cFile,char *p_cUser)
 {
 	printf("Inside ClearAllFiles\n");
 	int nCount=1,nFileDesc[5];
 	char szPath[100];
 	for(nCount;nCount<6;nCount++){
-		sprintf(szPath,"../User/%s/%slog%d.txt",pUser,pFile,nCount);
+		sprintf(szPath,"../User/%s/%slog%d.txt",p_cUser,p_cFile,nCount);
 		nFileDesc[nCount-1] = open(szPath,O_RDWR|O_APPEND|O_TRUNC);
 	}
 	printf("Outside ClearAllFile\n");
